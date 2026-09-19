@@ -377,47 +377,4 @@
   </div>
 </section>
 
-<!-- ═══ POP-UP ANNONCE (page de garde uniquement) ═══ -->
-<div class="announce-popup" id="announcePopup" role="dialog" aria-modal="true" aria-labelledby="announcePopupTitle" hidden>
-  <div class="announce-popup__overlay" data-announce-close></div>
-  <div class="announce-popup__card">
-    <button class="announce-popup__close" data-announce-close aria-label="Fermer">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-    <div class="announce-popup__icon" aria-hidden="true">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h13a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M7 17v2.5"/><path d="M13 17v2.5"/><path d="M20 9h1v2h-1a3 3 0 0 0-3 3v2h1"/></svg>
-    </div>
-    <span class="section-tag">Bonne nouvelle</span>
-    <h3 id="announcePopupTitle">Les cours reprennent !</h3>
-    <p>La saison 2026-2027 démarre le <strong>mardi 8 septembre</strong>. On vous attend au dojo !</p>
-    <a href="#adhesion" class="btn btn--primary" data-announce-close>Voir l'adhésion</a>
-  </div>
-</div>
-
-<script>
-(function(){
-  var popup = document.getElementById('announcePopup');
-  if (!popup || window.location.hash === '#adhesion') return;
-
-  function close(){
-    popup.hidden = true;
-    try { sessionStorage.setItem('jcc_popup_closed','1'); } catch(e){}
-  }
-  popup.querySelectorAll('[data-announce-close]').forEach(function(el){
-    el.addEventListener('click', close);
-  });
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-
-  var already = false;
-  try { already = sessionStorage.getItem('jcc_popup_closed') === '1'; } catch(e){}
-  if (!already) {
-    setTimeout(function(){ popup.hidden = false; }, 700);
-    document.body.style.overflow = 'hidden';
-    popup.addEventListener('click', function(e){
-      if (e.target.closest('[data-announce-close]')) document.body.style.overflow = '';
-    });
-  }
-})();
-</script>
-
 {{ end }}
