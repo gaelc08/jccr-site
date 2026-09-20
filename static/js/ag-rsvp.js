@@ -48,7 +48,7 @@
     var row = document.createElement('div');
     row.className = 'ag-personne-row';
     row.innerHTML =
-      '<label for="' + id + '">Nom et prénom de la personne représentée</label>' +
+      '<label for="' + id + '">Nom et prénom du licencié représenté</label>' +
       '<div class="ag-personne-row__inner">' +
       '<input class="ag-input" type="text" id="' + id + '" name="personne_nom" autocomplete="off">' +
       '<button type="button" class="ag-personne-remove" aria-label="Retirer cette personne">&times;</button>' +
@@ -119,7 +119,7 @@
   function validateClientSide(data) {
     var errors = [];
     if (!data.nom_licencie || data.nom_licencie.length < 2) {
-      errors.push('Le nom et prénom du licencié sont obligatoires.');
+      errors.push('Votre nom et prénom sont obligatoires.');
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
       errors.push("L'adresse email n'est pas valide.");
@@ -128,7 +128,7 @@
       errors.push('Merci de choisir une réponse : je viens, je donne procuration, ou je ne viens pas.');
     }
     if ((data.statut === 'present' || data.statut === 'procuration') && data.est_mineur && data.personnes_representees.length === 0) {
-      errors.push("Le licencié est mineur : merci d'indiquer le nom et prénom d'au moins une personne représentée.");
+      errors.push("Vous répondez pour un licencié mineur : merci d'indiquer le nom et prénom d'au moins un licencié représenté.");
     }
     if (data.statut === 'procuration' && (!data.procuration_a || data.procuration_a.length < 2)) {
       errors.push("Merci d'indiquer le nom et prénom de la personne à qui la procuration est donnée.");
@@ -144,14 +144,14 @@
 
   function renderRecap(data) {
     var html = '<h2>Merci, votre réponse est enregistrée</h2>';
-    html += '<p><strong>Licencié·e :</strong> ' + escapeHtml(data.nom_licencie) + '</p>';
+    html += '<p><strong>Répondant :</strong> ' + escapeHtml(data.nom_licencie) + '</p>';
     html += '<p><strong>Réponse :</strong> ' + STATUT_LABELS[data.statut] + '</p>';
     if (data.statut === 'procuration') {
       html += '<p><strong>Procuration donnée à :</strong> ' + escapeHtml(data.procuration_a) + '</p>';
     }
     if (data.personnes_representees.length > 0) {
       html +=
-        '<p><strong>Personne(s) représentée(s) :</strong></p><ul>' +
+        '<p><strong>Licencié(s) représenté(s) :</strong></p><ul>' +
         data.personnes_representees.map(function (p) { return '<li>' + escapeHtml(p.nom) + '</li>'; }).join('') +
         '</ul>';
     }

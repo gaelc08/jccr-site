@@ -22,14 +22,15 @@ description: "Assemblée générale du Judo Club Cattenom Rodemack : vendredi 9 
   </div>
 </div>
 
-Merci de nous indiquer si vous serez présent·e à l'assemblée générale, si vous donnez procuration à quelqu'un d'autre, ou si vous ne pourrez pas venir. Une réponse par licencié·e.
+Merci de nous indiquer si vous serez présent·e à l'assemblée générale, si vous donnez procuration à quelqu'un d'autre, ou si vous ne pourrez pas venir. Une réponse par personne qui vote. Si vous répondez pour vos enfants mineurs, indiquez votre nom et ajoutez une ligne par enfant représenté.
 
 <form id="ag-form" novalidate>
 
   <div id="ag-error-summary" class="ag-feedback ag-feedback--error" role="alert" hidden></div>
 
   <label class="ag-field" for="ag-nom">
-    Nom et prénom du licencié qui répond <span class="ag-required" aria-hidden="true">*</span>
+    Votre nom et prénom <span class="ag-required" aria-hidden="true">*</span>
+    <span class="ag-field__hint">La personne qui répond : vous-même si vous êtes licencié·e, ou le représentant légal d'un licencié mineur.</span>
   </label>
   <input class="ag-input" type="text" id="ag-nom" name="nom_licencie" autocomplete="name" required>
 
@@ -58,7 +59,7 @@ Merci de nous indiquer si vous serez présent·e à l'assemblée générale, si 
   <div id="ag-conditional-mineur" class="ag-block" hidden>
     <label class="ag-checkbox">
       <input type="checkbox" id="ag-mineur">
-      <span>Le licencié est mineur</span>
+      <span>Je réponds pour un licencié mineur</span>
     </label>
   </div>
 
@@ -70,8 +71,8 @@ Merci de nous indiquer si vous serez présent·e à l'assemblée générale, si 
   </div>
 
   <fieldset id="ag-personnes-block" class="ag-block ag-fieldset" hidden>
-    <legend>Personne(s) représentée(s)</legend>
-    <p class="ag-field__hint">Par exemple un enfant mineur. Obligatoire si le licencié est mineur.</p>
+    <legend>Licencié(s) que vous représentez</legend>
+    <p class="ag-field__hint">Un enfant mineur, par exemple. Une ligne par personne.</p>
     <div id="ag-personnes-list"></div>
     <button type="button" id="ag-add-personne" class="btn btn--ghost ag-add-btn">+ Ajouter une personne</button>
   </fieldset>
