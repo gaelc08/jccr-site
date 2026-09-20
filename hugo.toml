@@ -45,13 +45,17 @@ defaultContentLanguage = 'fr'
     url = '/calendrier'
     weight = 6
   [[menu.main]]
+    name = 'Assemblée Générale'
+    url = '/assemblee-generale/'
+    weight = 7
+  [[menu.main]]
     name = 'Contact'
     url = '/#contact'
-    weight = 7
+    weight = 8
   [[menu.main]]
     name = 'Espace Membre'
     url = '/espace-membre/'
-    weight = 8
+    weight = 9
 
 [markup.goldmark.renderer]
   unsafe = true
