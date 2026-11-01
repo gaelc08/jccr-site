@@ -1,0 +1,114 @@
+{{ define "main" }}
+<section class="page-hero">
+  <div class="container">
+    <a href="{{ "/index.html" | relURL }}" class="page-hero__back">← Retour à l'accueil</a>
+    <h1>{{ .Title }}</h1>
+  </div>
+</section>
+<section class="page-content">
+  <div class="container">
+    <article class="prose">
+
+      <p id="evt-loading" class="evt-notice" role="status">Chargement des informations de l'événement…</p>
+      <noscript><p class="evt-notice">Le formulaire d'inscription nécessite JavaScript. Vous pouvez aussi nous écrire via la <a href="{{ "contact/" | relURL }}">page Contact</a>.</p></noscript>
+      <div id="evt-load-error" class="ag-feedback ag-feedback--error" role="alert" hidden></div>
+
+      <div id="evt-infobar" class="ag-infobar evt-infobar" role="group" aria-label="Informations sur l'événement" hidden>
+        <div class="ag-infobar__item">
+          <span class="ag-infobar__label">Date</span>
+          <span class="ag-infobar__value" id="evt-date"></span>
+        </div>
+        <div class="ag-infobar__item">
+          <span class="ag-infobar__label">Lieu</span>
+          <span class="ag-infobar__value" id="evt-location"></span>
+          <span class="evt-infobar__detail" id="evt-address"></span>
+        </div>
+        <div class="ag-infobar__item ag-infobar__item--deadline">
+          <span class="ag-infobar__label">Inscription avant le</span>
+          <span class="ag-infobar__value" id="evt-deadline"></span>
+        </div>
+        <div class="ag-infobar__item evt-infobar__sessions" id="evt-sessions-item" hidden>
+          <span class="ag-infobar__label">Créneaux</span>
+          <div id="evt-sessions"></div>
+        </div>
+      </div>
+
+      {{ .Content }}
+
+      <p id="evt-closed" class="evt-notice" hidden>Les inscriptions sont closes.</p>
+
+      <form id="evt-form" data-event-slug="{{ .Params.event_slug }}" novalidate hidden>
+
+        <div id="evt-error-summary" class="ag-feedback ag-feedback--error" role="alert" hidden></div>
+
+        <p class="ag-field__hint evt-help">Une inscription par judoka. Pour inscrire plusieurs enfants, renvoyez le formulaire pour chacun.</p>
+
+        <fieldset class="ag-fieldset">
+          <legend>Judoka</legend>
+
+          <label class="ag-field" for="evt-first-name">
+            Prénom <span class="ag-required" aria-hidden="true">*</span>
+          </label>
+          <input class="ag-input" type="text" id="evt-first-name" name="first_name" autocomplete="off" required>
+
+          <label class="ag-field" for="evt-last-name">
+            Nom <span class="ag-required" aria-hidden="true">*</span>
+          </label>
+          <input class="ag-input" type="text" id="evt-last-name" name="last_name" autocomplete="off" required>
+
+          <label class="ag-field" for="evt-dob">
+            Date de naissance <span class="ag-required" aria-hidden="true">*</span>
+            <span class="ag-field__hint">Elle permet de retrouver la licence et de déterminer la catégorie.</span>
+          </label>
+          <input class="ag-input" type="date" id="evt-dob" name="date_of_birth" placeholder="JJ/MM/AAAA" required>
+        </fieldset>
+
+        <fieldset class="ag-fieldset">
+          <legend>Vos coordonnées</legend>
+
+          <label class="ag-field" for="evt-respondent-name">
+            Votre nom et prénom <span class="ag-required" aria-hidden="true">*</span>
+            <span class="ag-field__hint">Le parent pour un judoka mineur, ou le judoka lui-même s'il est majeur.</span>
+          </label>
+          <input class="ag-input" type="text" id="evt-respondent-name" name="respondent_name" autocomplete="name" required>
+
+          <label class="ag-field" for="evt-email">
+            Adresse email <span class="ag-required" aria-hidden="true">*</span>
+            <span class="ag-field__hint">Pour vous envoyer la confirmation</span>
+          </label>
+          <input class="ag-input" type="email" id="evt-email" name="respondent_email" autocomplete="email" required>
+
+          <label class="ag-field" for="evt-phone">
+            Téléphone <span class="ag-field__hint">Facultatif, pour vous joindre le jour même si besoin</span>
+          </label>
+          <input class="ag-input" type="tel" id="evt-phone" name="respondent_phone" autocomplete="tel">
+        </fieldset>
+
+        <label class="ag-field" for="evt-comment">
+          Commentaire <span class="ag-field__hint">Facultatif</span>
+        </label>
+        <textarea class="ag-input" id="evt-comment" name="comment" rows="3"></textarea>
+
+        <div class="ag-hp">
+          <label for="evt-website">Site web (laisser ce champ vide)</label>
+          <input type="text" id="evt-website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <p class="ag-rgpd">
+          Ces informations sont utilisées uniquement pour l'organisation de cet événement, y compris l'inscription du judoka auprès de l'organisateur. Elles ne sont pas utilisées à d'autres fins. Voir notre <a href="{{ "politique-de-confidentialite/" | relURL }}">politique de confidentialité</a>.
+        </p>
+
+        <button type="submit" id="evt-submit" class="btn btn--primary btn--lg">Inscrire</button>
+      </form>
+
+      <div id="evt-success" class="ag-feedback ag-feedback--success" hidden>
+        <h2>Inscription enregistrée</h2>
+        <p id="evt-success-text"></p>
+        <button type="button" id="evt-again" class="btn btn--ghost evt-again-btn">Inscrire un autre judoka</button>
+      </div>
+
+    </article>
+  </div>
+</section>
+<script src="{{ "js/event-register.js" | relURL }}" defer></script>
+{{ end }}
