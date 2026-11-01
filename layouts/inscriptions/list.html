@@ -1,0 +1,24 @@
+{{ define "main" }}
+<section class="page-hero">
+  <div class="container">
+    <a href="{{ "/index.html" | relURL }}" class="page-hero__back">← Retour à l'accueil</a>
+    <h1>{{ .Title }}</h1>
+  </div>
+</section>
+<section class="page-content">
+  <div class="container">
+    <article class="prose">
+      {{ .Content }}
+      {{ with .Pages }}
+      <ul>
+        {{ range . }}
+        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+        {{ end }}
+      </ul>
+      {{ else }}
+      <p>Aucune inscription en ligne n'est ouverte pour le moment.</p>
+      {{ end }}
+    </article>
+  </div>
+</section>
+{{ end }}
