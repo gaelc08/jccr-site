@@ -69,6 +69,25 @@
     return String(hhmm || '').replace(':', 'h');
   }
 
+  // Horaires d'une session, en texte brut (à échapper selon l'usage) :
+  // - infobar : « 15h00 – 16h30 » / « à partir de 15h00 » / « Horaire à confirmer »
+  // - sentence : « de 15h00 à 16h30 » / « à partir de 15h00 » / « horaire à confirmer »
+  function formatSessionHours(start, end) {
+    if (start && end) {
+      return {
+        infobar: formatTime(start) + ' – ' + formatTime(end),
+        sentence: 'de ' + formatTime(start) + ' à ' + formatTime(end)
+      };
+    }
+    if (start) {
+      return {
+        infobar: 'à partir de ' + formatTime(start),
+        sentence: 'à partir de ' + formatTime(start)
+      };
+    }
+    return { infobar: 'Horaire à confirmer', sentence: 'horaire à confirmer' };
+  }
+
   // Date limite ISO -> « 10 novembre 2026 à 23h59 », en heure de Paris.
   function formatDeadline(iso) {
     var d = new Date(iso);
@@ -94,7 +113,7 @@
         return (
           '<div class="evt-session">' +
           '<span class="ag-infobar__value">' + escapeHtml(s.label) + ' : ' +
-          (s.start_time ? escapeHtml(formatTime(s.start_time)) + ' – ' + escapeHtml(formatTime(s.end_time)) : 'Horaire à confirmer') + '</span>' +
+          escapeHtml(formatSessionHours(s.start_time, s.end_time).infobar) + '</span>' +
           '<span class="evt-infobar__detail">' + escapeHtml((s.categories || []).join(', ')) + '</span>' +
           '</div>'
         );
@@ -267,9 +286,7 @@
           return;
         }
         var r = result.body;
-        var schedule = r.start_time
-          ? ', de ' + formatTime(r.start_time) + ' à ' + formatTime(r.end_time)
-          : ', horaire à confirmer';
+        var schedule = ', ' + formatSessionHours(r.start_time, r.end_time).sentence;
         successText.textContent =
           (r.first_name || data.first_name) + ' est inscrit(e) — ' + r.session_label +
           schedule + '. Un e-mail de confirmation vous a été envoyé.';
