@@ -45,6 +45,10 @@ defaultContentLanguage = 'fr'
     url = '/calendrier'
     weight = 6
   [[menu.main]]
+    name = 'Inscriptions'
+    url = '/inscriptions/'
+    weight = 7
+  [[menu.main]]
     name = 'Contact'
     url = '/#contact'
     weight = 8

@@ -10,9 +10,12 @@
     <article class="prose">
       {{ .Content }}
       {{ with .Pages }}
-      <ul>
+      <ul class="event-list">
         {{ range . }}
-        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+        <li class="event-list__item">
+          <a class="event-list__link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{ with .Params.description }}<p class="event-list__desc">{{ . }}</p>{{ end }}
+        </li>
         {{ end }}
       </ul>
       {{ else }}
