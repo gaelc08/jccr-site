@@ -35,6 +35,7 @@
   var firstNameInput = document.getElementById('evt-first-name');
   var lastNameInput = document.getElementById('evt-last-name');
   var dobInput = document.getElementById('evt-dob');
+  var dobField = document.getElementById('evt-dob-field');
   var respondentNameInput = document.getElementById('evt-respondent-name');
   var emailInput = document.getElementById('evt-email');
   var phoneInput = document.getElementById('evt-phone');
@@ -184,7 +185,8 @@
     var errors = [];
     if (!data.first_name) errors.push('Le prénom du judoka est obligatoire.');
     if (!data.last_name) errors.push('Le nom du judoka est obligatoire.');
-    if (!isValidPastDate(data.date_of_birth)) {
+    // La date n'est vérifiée que si le champ est affiché (homonymes).
+    if (!dobField.hidden && !isValidPastDate(data.date_of_birth)) {
       errors.push("La date de naissance du judoka n'est pas valide.");
     }
     if (!data.respondent_name || data.respondent_name.length < 2) {
@@ -197,6 +199,20 @@
       errors.push("Le numéro de téléphone n'est pas valide.");
     }
     return errors;
+  }
+
+  // La date de naissance est reprise de la licence FFJDA : le champ reste
+  // masqué et n'est demandé que si le serveur signale des homonymes
+  // (réponse `need_dob: true`). Il devient alors obligatoire.
+  function showDobField() {
+    dobField.hidden = false;
+    dobInput.required = true;
+  }
+
+  function hideDobField() {
+    dobField.hidden = true;
+    dobInput.required = false;
+    dobInput.value = '';
   }
 
   function resetSubmit() {
@@ -212,7 +228,7 @@
       slug: slug,
       first_name: firstNameInput.value.trim(),
       last_name: lastNameInput.value.trim(),
-      date_of_birth: normalizeDate(dobInput.value),
+      date_of_birth: dobField.hidden ? null : normalizeDate(dobInput.value),
       respondent_name: respondentNameInput.value.trim(),
       respondent_email: emailInput.value.trim(),
       respondent_phone: phoneInput.value.trim(),
@@ -243,8 +259,11 @@
       })
       .then(function (result) {
         if (!result.ok || !result.body || !result.body.success) {
+          var needDob = !!(result.body && result.body.need_dob);
+          if (needDob) showDobField();
           showServerError((result.body && result.body.error) || GENERIC_ERROR);
           resetSubmit();
+          if (needDob) dobInput.focus();
           return;
         }
         var r = result.body;
@@ -264,12 +283,21 @@
       });
   });
 
+  // Prénom ou nom modifié après l'apparition du champ date : il s'agit d'un
+  // autre judoka, on masque à nouveau le champ et on vide la date.
+  function onNameInput() {
+    if (!dobField.hidden) hideDobField();
+  }
+  firstNameInput.addEventListener('input', onNameInput);
+  lastNameInput.addEventListener('input', onNameInput);
+
   // Nouvelle inscription : on vide le bloc Judoka (et le commentaire, propre
-  // à chaque judoka) mais on garde les coordonnées du répondant.
+  // à chaque judoka) et on masque à nouveau la date de naissance, mais on
+  // garde les coordonnées du répondant.
   againBtn.addEventListener('click', function () {
     firstNameInput.value = '';
     lastNameInput.value = '';
-    dobInput.value = '';
+    hideDobField();
     commentInput.value = '';
     clearErrors();
     successPanel.hidden = true;
