@@ -56,11 +56,13 @@
           </label>
           <input class="ag-input" type="text" id="evt-last-name" name="last_name" autocomplete="off" required>
 
-          <label class="ag-field" for="evt-dob">
-            Date de naissance <span class="ag-required" aria-hidden="true">*</span>
-            <span class="ag-field__hint">Elle permet de retrouver la licence et de déterminer la catégorie.</span>
-          </label>
-          <input class="ag-input" type="date" id="evt-dob" name="date_of_birth" placeholder="JJ/MM/AAAA" required>
+          <div id="evt-dob-field" hidden>
+            <label class="ag-field" for="evt-dob">
+              Date de naissance
+              <span class="ag-field__hint">Plusieurs licenciés portent ce nom : la date de naissance permet de retrouver la bonne licence.</span>
+            </label>
+            <input class="ag-input" type="date" id="evt-dob" name="date_of_birth" placeholder="JJ/MM/AAAA">
+          </div>
         </fieldset>
 
         <fieldset class="ag-fieldset">
