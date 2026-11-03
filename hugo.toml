@@ -45,7 +45,7 @@ defaultContentLanguage = 'fr'
     url = '/calendrier'
     weight = 6
   [[menu.main]]
-    name = 'Inscriptions'
+    name = 'Événements'
     url = '/inscriptions/'
     weight = 7
   [[menu.main]]
