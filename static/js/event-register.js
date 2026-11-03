@@ -94,7 +94,7 @@
         return (
           '<div class="evt-session">' +
           '<span class="ag-infobar__value">' + escapeHtml(s.label) + ' : ' +
-          escapeHtml(formatTime(s.start_time)) + ' – ' + escapeHtml(formatTime(s.end_time)) + '</span>' +
+          (s.start_time ? escapeHtml(formatTime(s.start_time)) + ' – ' + escapeHtml(formatTime(s.end_time)) : 'Horaire à confirmer') + '</span>' +
           '<span class="evt-infobar__detail">' + escapeHtml((s.categories || []).join(', ')) + '</span>' +
           '</div>'
         );
@@ -267,10 +267,12 @@
           return;
         }
         var r = result.body;
+        var schedule = r.start_time
+          ? ', de ' + formatTime(r.start_time) + ' à ' + formatTime(r.end_time)
+          : ', horaire à confirmer';
         successText.textContent =
           (r.first_name || data.first_name) + ' est inscrit(e) — ' + r.session_label +
-          ', de ' + formatTime(r.start_time) + ' à ' + formatTime(r.end_time) +
-          '. Un e-mail de confirmation vous a été envoyé.';
+          schedule + '. Un e-mail de confirmation vous a été envoyé.';
         form.hidden = true;
         resetSubmit();
         successPanel.hidden = false;
