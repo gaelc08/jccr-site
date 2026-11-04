@@ -101,6 +101,36 @@
     }
   }
 
+  // [2021, 2022] -> « (nés en 2021-2022) » ; [2021, 2023] -> « (nés en 2021, 2023) » ; [] -> ''
+  function formatBirthYears(years) {
+    if (!years || years.length === 0) return '';
+    var sorted = years.slice().sort(function (a, b) { return a - b; });
+    var consecutive = true;
+    for (var i = 1; i < sorted.length; i++) {
+      if (sorted[i] !== sorted[i - 1] + 1) {
+        consecutive = false;
+        break;
+      }
+    }
+    var text;
+    if (sorted.length === 1) {
+      text = String(sorted[0]);
+    } else if (consecutive) {
+      text = sorted[0] + '-' + sorted[sorted.length - 1];
+    } else {
+      text = sorted.join(', ');
+    }
+    return '(nés en ' + text + ')';
+  }
+
+  // Ligne de détail d'une session : catégories, suivies des années de naissance si précisées.
+  function formatSessionDetail(s) {
+    var detail = (s.categories || []).join(', ');
+    var years = formatBirthYears(s.birth_years);
+    if (years) detail = detail ? detail + ' ' + years : years;
+    return detail;
+  }
+
   function renderInfobar(evt) {
     document.getElementById('evt-date').textContent = formatEventDate(evt.event_date);
     document.getElementById('evt-location').textContent = evt.location || '';
@@ -114,7 +144,7 @@
           '<div class="evt-session">' +
           '<span class="ag-infobar__value">' + escapeHtml(s.label) + ' : ' +
           escapeHtml(formatSessionHours(s.start_time, s.end_time).infobar) + '</span>' +
-          '<span class="evt-infobar__detail">' + escapeHtml((s.categories || []).join(', ')) + '</span>' +
+          '<span class="evt-infobar__detail">' + escapeHtml(formatSessionDetail(s)) + '</span>' +
           '</div>'
         );
       }).join('');
