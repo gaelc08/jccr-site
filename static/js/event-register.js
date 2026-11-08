@@ -354,5 +354,29 @@
     firstNameInput.focus();
   });
 
+  // Pré-remplissage depuis l'onglet Famille de l'app de gestion :
+  // /inscriptions/<slug>/#prenom=Léo&nom=DUPONT&email=parent@exemple.fr
+  // Le fragment (#) n'est jamais envoyé au serveur ; on l'efface de l'adresse
+  // après lecture pour qu'il ne reste ni dans l'historique ni dans un partage.
+  function prefillFromHash() {
+    var hash = (window.location.hash || '').replace(/^#/, '');
+    if (!hash || hash.indexOf('=') === -1) return;
+    var params = {};
+    hash.split('&').forEach(function (pair) {
+      var i = pair.indexOf('=');
+      if (i <= 0) return;
+      try {
+        params[decodeURIComponent(pair.slice(0, i))] = decodeURIComponent(pair.slice(i + 1).replace(/\+/g, ' ')).slice(0, 120);
+      } catch (e) { /* paramètre mal formé : ignoré */ }
+    });
+    if (params.prenom) firstNameInput.value = params.prenom;
+    if (params.nom) lastNameInput.value = params.nom;
+    if (params.email) emailInput.value = params.email;
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }
+
+  prefillFromHash();
   loadEvent();
 })();
