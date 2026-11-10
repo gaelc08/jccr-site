@@ -28,9 +28,10 @@
   var errorSummary = document.getElementById('evt-error-summary');
   var successPanel = document.getElementById('evt-success');
   var successText = document.getElementById('evt-success-text');
+  var successTitle = document.getElementById('evt-success-title');
   var againBtn = document.getElementById('evt-again');
   var submitBtn = document.getElementById('evt-submit');
-  var SUBMIT_LABEL = submitBtn.textContent;
+  var SUBMIT_LABELS = { present: 'Inscrire', absent: 'Envoyer la réponse' };
 
   var firstNameInput = document.getElementById('evt-first-name');
   var lastNameInput = document.getElementById('evt-last-name');
@@ -41,6 +42,22 @@
   var phoneInput = document.getElementById('evt-phone');
   var commentInput = document.getElementById('evt-comment');
   var websiteInput = document.getElementById('evt-website');
+  var statusInputs = form.querySelectorAll('input[name="status"]');
+
+  // Réponse choisie : 'present' (inscription) ou 'absent' (ne participera pas).
+  function currentStatus() {
+    for (var i = 0; i < statusInputs.length; i++) {
+      if (statusInputs[i].checked) return statusInputs[i].value === 'absent' ? 'absent' : 'present';
+    }
+    return 'present';
+  }
+
+  function setStatus(status) {
+    for (var i = 0; i < statusInputs.length; i++) {
+      statusInputs[i].checked = statusInputs[i].value === status;
+    }
+    resetSubmit();
+  }
 
   var DAYS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
   var MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
@@ -266,7 +283,7 @@
 
   function resetSubmit() {
     submitBtn.disabled = false;
-    submitBtn.textContent = SUBMIT_LABEL;
+    submitBtn.textContent = SUBMIT_LABELS[currentStatus()];
   }
 
   form.addEventListener('submit', function (e) {
@@ -275,6 +292,7 @@
 
     var data = {
       slug: slug,
+      status: currentStatus(),
       first_name: firstNameInput.value.trim(),
       last_name: lastNameInput.value.trim(),
       date_of_birth: dobField.hidden ? null : normalizeDate(dobInput.value),
@@ -316,10 +334,20 @@
           return;
         }
         var r = result.body;
-        var schedule = ', ' + formatSessionHours(r.start_time, r.end_time).sentence;
-        successText.textContent =
-          (r.first_name || data.first_name) + ' est inscrit(e) — ' + r.session_label +
-          schedule + '. Un e-mail de confirmation vous a été envoyé.';
+        var name = r.first_name || data.first_name;
+        if (r.status === 'absent') {
+          successTitle.textContent = 'Réponse enregistrée';
+          successText.textContent =
+            'Nous avons noté que ' + name + ' ne participera pas' +
+            (r.changed ? ' : son inscription est annulée' : '') +
+            '. Un e-mail de confirmation vous a été envoyé.';
+        } else {
+          var schedule = ', ' + formatSessionHours(r.start_time, r.end_time).sentence;
+          successTitle.textContent = 'Inscription enregistrée';
+          successText.textContent =
+            name + ' est inscrit(e) — ' + r.session_label +
+            schedule + '. Un e-mail de confirmation vous a été envoyé.';
+        }
         form.hidden = true;
         resetSubmit();
         successPanel.hidden = false;
@@ -339,6 +367,9 @@
   }
   firstNameInput.addEventListener('input', onNameInput);
   lastNameInput.addEventListener('input', onNameInput);
+  for (var si = 0; si < statusInputs.length; si++) {
+    statusInputs[si].addEventListener('change', resetSubmit);
+  }
 
   // Nouvelle inscription : on vide le bloc Judoka (et le commentaire, propre
   // à chaque judoka) et on masque à nouveau la date de naissance, mais on
@@ -348,6 +379,7 @@
     lastNameInput.value = '';
     hideDobField();
     commentInput.value = '';
+    setStatus('present');
     clearErrors();
     successPanel.hidden = true;
     form.hidden = false;
@@ -356,6 +388,7 @@
 
   // Pré-remplissage depuis l'onglet Famille de l'app de gestion :
   // /inscriptions/<slug>/#prenom=Léo&nom=DUPONT&email=parent@exemple.fr
+  // (+ &reponse=absent pour ouvrir le formulaire sur « ne participera pas »)
   // Le fragment (#) n'est jamais envoyé au serveur ; on l'efface de l'adresse
   // après lecture pour qu'il ne reste ni dans l'historique ni dans un partage.
   function prefillFromHash() {
@@ -372,11 +405,13 @@
     if (params.prenom) firstNameInput.value = params.prenom;
     if (params.nom) lastNameInput.value = params.nom;
     if (params.email) emailInput.value = params.email;
+    if (params.reponse === 'absent') setStatus('absent');
     if (window.history && window.history.replaceState) {
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
     }
   }
 
+  resetSubmit();
   prefillFromHash();
   loadEvent();
 })();
