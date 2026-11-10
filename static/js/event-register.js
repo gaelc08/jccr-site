@@ -367,8 +367,13 @@
   }
   firstNameInput.addEventListener('input', onNameInput);
   lastNameInput.addEventListener('input', onNameInput);
+  // Pendant un envoi, le bouton reste désactivé : on ne change que son libellé.
+  function onStatusChange() {
+    if (submitBtn.disabled) return;
+    resetSubmit();
+  }
   for (var si = 0; si < statusInputs.length; si++) {
-    statusInputs[si].addEventListener('change', resetSubmit);
+    statusInputs[si].addEventListener('change', onStatusChange);
   }
 
   // Nouvelle inscription : on vide le bloc Judoka (et le commentaire, propre
