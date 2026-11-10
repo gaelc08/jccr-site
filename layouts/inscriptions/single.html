@@ -41,7 +41,19 @@
 
         <div id="evt-error-summary" class="ag-feedback ag-feedback--error" role="alert" hidden></div>
 
-        <p class="ag-field__hint evt-help">Une inscription par judoka. Pour inscrire plusieurs enfants, renvoyez le formulaire pour chacun.</p>
+        <p class="ag-field__hint evt-help">Une réponse par judoka. Pour plusieurs enfants, renvoyez le formulaire pour chacun. Si le judoka ne vient pas, dites-le aussi : le club sait ainsi qui a répondu.</p>
+
+        <fieldset class="ag-fieldset">
+          <legend>Votre réponse <span class="ag-required" aria-hidden="true">*</span></legend>
+          <label class="ag-radio">
+            <input type="radio" name="status" value="present" checked>
+            <span>Le judoka participera</span>
+          </label>
+          <label class="ag-radio">
+            <input type="radio" name="status" value="absent">
+            <span>Le judoka ne participera pas</span>
+          </label>
+        </fieldset>
 
         <fieldset class="ag-fieldset">
           <legend>Judoka</legend>
@@ -104,9 +116,9 @@
       </form>
 
       <div id="evt-success" class="ag-feedback ag-feedback--success" hidden>
-        <h2>Inscription enregistrée</h2>
+        <h2 id="evt-success-title">Inscription enregistrée</h2>
         <p id="evt-success-text"></p>
-        <button type="button" id="evt-again" class="btn btn--ghost evt-again-btn">Inscrire un autre judoka</button>
+        <button type="button" id="evt-again" class="btn btn--ghost evt-again-btn">Répondre pour un autre judoka</button>
       </div>
 
     </article>
