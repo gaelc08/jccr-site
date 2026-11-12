@@ -33,6 +33,8 @@ Ces données sont utilisées pour :
 
 **Base légale** : l'exécution du contrat d'adhésion et l'intérêt légitime de l'association à organiser ses activités.
 
+Pour une commande à la boutique du club, le club collecte le nom, le prénom, l'adresse e-mail, le numéro de téléphone (facultatif), le nom de l'adhérent concerné (facultatif) et les articles commandés. Ces données servent uniquement à traiter la commande, à la commander auprès du fournisseur et à vous prévenir de son arrivée au club. Le paiement est traité par HelloAsso ; le club ne reçoit pas les données bancaires. **Base légale** : l'exécution de la commande.
+
 ## Application Hermes et données des comptes Google
 
 ### Qu'est-ce que Hermes ?
@@ -74,7 +76,7 @@ Les données sont accessibles uniquement aux destinataires suivants, chacun pour
 
 - les membres du bureau et les entraîneurs du club ;
 - la Fédération française de judo, pour l'établissement de la licence ;
-- HelloAsso, pour le paiement de l'adhésion ;
+- HelloAsso, pour le paiement de l'adhésion et des commandes de la boutique ;
 - les prestataires techniques d'hébergement, agissant pour le compte du club.
 
 ## Durée de conservation

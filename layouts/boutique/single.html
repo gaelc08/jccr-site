@@ -1,0 +1,37 @@
+{{ define "main" }}
+<section class="page-hero">
+  <div class="container">
+    <a href="{{ "boutique/" | relURL }}" class="page-hero__back">← Retour à la boutique</a>
+    <h1>{{ .Title }}</h1>
+  </div>
+</section>
+<section class="page-content">
+  <div class="container">
+    <article class="prose shop-order" id="shop-order">
+      <p id="order-loading" class="evt-notice" role="status">Vérification de votre commande auprès de HelloAsso…</p>
+      <noscript><p class="evt-notice">Cette page nécessite JavaScript. Votre confirmation vous a aussi été envoyée par e-mail.</p></noscript>
+      <div id="order-error" class="ag-feedback ag-feedback--error" role="alert" hidden></div>
+
+      <div id="order-panel" hidden>
+        <div id="order-status" class="ag-feedback" role="status"></div>
+        <dl class="shop-order__facts">
+          <div><dt>Commande</dt><dd id="order-number"></dd></div>
+          <div><dt>Statut</dt><dd id="order-status-label"></dd></div>
+          <div><dt>Passée le</dt><dd id="order-date"></dd></div>
+          <div><dt>Total</dt><dd id="order-total"></dd></div>
+        </dl>
+        <h2>Articles</h2>
+        <ul id="order-items" class="shop-order__items"></ul>
+        <p id="order-pickup" hidden></p>
+        <p class="shop-order__actions">
+          <button type="button" id="order-refresh" class="btn btn--outline" hidden>Vérifier à nouveau</button>
+          <a href="{{ "boutique/" | relURL }}" class="btn btn--primary" id="order-back">Retour à la boutique</a>
+        </p>
+        <p class="ag-field__hint">Gardez ce lien : il permet de suivre votre commande. Une question ? Écrivez-nous via la <a href="{{ "contact/" | relURL }}">page Contact</a> en indiquant le numéro de commande.</p>
+      </div>
+    </article>
+  </div>
+</section>
+<script src="{{ "js/shop-config.js" | relURL }}" defer></script>
+<script src="{{ "js/boutique-commande.js" | relURL }}" defer></script>
+{{ end }}

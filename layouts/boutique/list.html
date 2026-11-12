@@ -12,477 +12,88 @@
 
     <div class="boutique__info">
       <div class="boutique__info-row">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <div>
-          <strong>Pré-commandes ouvertes :</strong>
-          <span>Les pré-commandes sont ouvertes jusqu'à fin novembre.</span>
+          <strong>En précommande :</strong>
+          <span id="shop-campaign-text">les commandes sont regroupées puis envoyées au fournisseur en une fois.</span>
         </div>
       </div>
       <div class="boutique__info-row">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-        <div>
-          <strong>Livraison au dojo :</strong>
-          <span>La livraison au dojo est prévue début janvier.</span>
-        </div>
-      </div>
-      <div class="boutique__info-row">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
         <div>
           <strong>Comment commander ?</strong>
-          <span>Ajoutez vos articles au panier, puis payez en ligne (carte bancaire).</span>
+          <span>Ajoutez vos articles au panier, puis payez en ligne par carte avec HelloAsso. Vous recevez une confirmation par e-mail.</span>
         </div>
       </div>
       <div class="boutique__info-row">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
         <div>
-          <strong>Le retrait se fait au dojo :</strong>
-          <span>Maison des arts martiaux, 3 rue Saint-Exupéry, 57570 Cattenom.</span>
+          <strong>Retrait au dojo :</strong>
+          <span id="shop-pickup-text">Maison des arts martiaux, 3 rue Saint-Exupéry, 57570 Cattenom. Nous vous prévenons par e-mail quand votre commande est arrivée.</span>
         </div>
       </div>
     </div>
 
-    <!-- Loading state -->
-    <div id="loading" class="boutique__loading" style="text-align:center;padding:80px 0;">
-      <div class="boutique__spinner"></div>
-      <p>Chargement des produits…</p>
-    </div>
+    <p id="shop-loading" class="boutique__loading" role="status">Chargement des produits…</p>
+    <noscript><p class="evt-notice">La boutique nécessite JavaScript. Vous pouvez aussi nous écrire via la <a href="{{ "contact/" | relURL }}">page Contact</a>.</p></noscript>
+    <div id="shop-error" class="ag-feedback ag-feedback--error" role="alert" hidden></div>
+    <p id="shop-closed" class="evt-notice" hidden>La boutique est fermée pour le moment. Revenez à la prochaine campagne de commandes, annoncée sur le site et par e-mail aux adhérents.</p>
+    <p id="shop-notice" class="evt-notice" role="status" hidden></p>
 
-    <!-- Product Grid (populated by JS) -->
-    <div id="products-grid" class="products" style="display:none;"></div>
+    <div id="shop-products" class="products shop-products" hidden></div>
 
-    <!-- Error state -->
-    <div id="error" class="boutique__error" style="display:none;">
-      <p>Impossible de charger les produits. Vérifiez votre connexion et réessayez.</p>
-    </div>
+    <section id="shop-cart" class="shop-cart" aria-labelledby="shop-cart-title" hidden>
+      <h2 id="shop-cart-title" class="shop-cart__title" tabindex="-1">Votre panier</h2>
+      <p id="shop-cart-empty" class="shop-cart__empty">Votre panier est vide.</p>
+      <ul id="shop-cart-lines" class="shop-cart__lines"></ul>
+      <p id="shop-cart-total" class="shop-cart__total" hidden></p>
 
-    <!-- Cart -->
-    <div id="cart-panel" class="cart" style="display:none;">
-      <div class="cart__inner">
-        <div class="cart__header">
-          <h3>🛒 Votre panier</h3>
-          <button class="cart__close" onclick="toggleCart(false)">✕</button>
-        </div>
-        <div id="cart-items" class="cart__items"></div>
-        <div class="cart__footer">
-          <div class="cart__total">
-            <span>Total</span>
-            <span id="cart-total-price" class="cart__total-price">0 €</span>
+      <form id="shop-form" class="shop-form" novalidate hidden>
+        <div id="shop-form-error" class="ag-feedback ag-feedback--error" role="alert" hidden></div>
+        <div class="shop-form__row">
+          <div class="ag-field">
+            <label for="shop-first-name">Prénom <span class="ag-required" aria-hidden="true">*</span></label>
+            <input class="ag-input" id="shop-first-name" name="first_name" autocomplete="given-name" maxlength="50" required>
           </div>
-          <form id="checkout-form" class="cart__form">
-            <input type="text" id="customer-name" placeholder="Votre nom complet" required class="cart__input">
-            <input type="email" id="customer-email" placeholder="Votre email" required class="cart__input">
-            <button type="submit" class="btn btn--primary" style="width:100%">Commander</button>
-          </form>
+          <div class="ag-field">
+            <label for="shop-last-name">Nom <span class="ag-required" aria-hidden="true">*</span></label>
+            <input class="ag-input" id="shop-last-name" name="last_name" autocomplete="family-name" maxlength="50" required>
+          </div>
         </div>
-      </div>
-    </div>
+        <div class="shop-form__row">
+          <div class="ag-field">
+            <label for="shop-email">E-mail <span class="ag-required" aria-hidden="true">*</span></label>
+            <input class="ag-input" id="shop-email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="shop-email-hint">
+            <p class="ag-field__hint" id="shop-email-hint">Pour la confirmation et l'avis d'arrivée au club.</p>
+          </div>
+          <div class="ag-field">
+            <label for="shop-phone">Téléphone</label>
+            <input class="ag-input" id="shop-phone" name="phone" type="tel" autocomplete="tel" maxlength="20">
+          </div>
+        </div>
+        <div class="ag-field">
+          <label for="shop-member">Pour quel adhérent ? <span class="ag-field__hint">(facultatif)</span></label>
+          <input class="ag-input" id="shop-member" name="member_name" maxlength="100">
+        </div>
+        <!-- Pot de miel : laisser vide. -->
+        <div class="shop-hp" aria-hidden="true">
+          <label for="shop-website">Ne pas remplir</label>
+          <input id="shop-website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <button type="submit" id="shop-pay" class="btn btn--primary shop-form__pay">Payer avec HelloAsso</button>
+        <p class="ag-field__hint">Paiement sécurisé par HelloAsso. HelloAsso peut vous proposer une contribution volontaire à son fonctionnement : elle est facultative.
+          Vos coordonnées servent uniquement au suivi de la commande. Voir notre <a href="{{ "politique-de-confidentialite/" | relURL }}">politique de confidentialité</a>.</p>
+      </form>
+    </section>
 
-    <!-- Floating cart button -->
-    <button id="cart-btn" class="cart__fab" onclick="toggleCart(true)" style="display:none;">
-      🛒 <span id="cart-count">0</span>
-    </button>
+    <a id="shop-cart-fab" class="cart__fab shop-cart-fab" href="#shop-cart-title" hidden aria-label="Voir le panier">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+      <span id="shop-cart-count">0</span>
+    </a>
 
   </div>
 </section>
 
-<script>
-// ─── API endpoint ────────────────────────────────────────────────────
-const API_URL = '/wp-json/jcc/v1/products';
-
-// Static product images (hosted on the server)
-const PRODUCT_IMAGES = {
-  'T-shirt Enfant': ['/boutique/images/tshirt_homme_front.jpeg', '/boutique/images/tshirt_homme_back.jpeg'],
-  'T-shirt Mixte Adulte': ['/boutique/images/tshirt_homme_front.jpeg', '/boutique/images/tshirt_homme_back.jpeg'],
-  'Hoodie Junior': ['/boutique/images/hoodies_homme_front.jpeg', '/boutique/images/hoodies_homme_back.jpeg'],
-  'Hoodie Femme': ['/boutique/images/hoodies_femme_front.jpeg', '/boutique/images/hoodies_femme_back.jpeg'],
-  'Hoodie Adulte': ['/boutique/images/hoodies_homme_front.jpeg', '/boutique/images/hoodies_homme_back.jpeg'],
-  'Polaire Femme': ['/boutique/images/polaire_femme_front.jpeg', '/boutique/images/polaire_femme_back.jpeg'],
-  'Veste Softshell': ['/boutique/images/veste_front.jpeg', '/boutique/images/veste_back.jpeg'],
-  'Sac de Sport 75L': ['/boutique/images/sac_sport.jpeg', '/boutique/images/sac_sport_details.jpeg'],
-  'Casquette Enfant': ['/boutique/images/casquette_1.jpeg', '/boutique/images/casquette_2.jpeg'],
-  'Casquette Adulte': ['/boutique/images/casquette_1.jpeg', '/boutique/images/casquette_2.jpeg'],
-  // Nouveaux intitulés (les anciens ci-dessus sont conservés le temps de la transition)
-  'Veste Molleton Femme': ['/boutique/images/polaire_femme_front.jpeg', '/boutique/images/polaire_femme_back.jpeg'],
-  'Veste Softshell Homme': ['/boutique/images/veste_front.jpeg', '/boutique/images/veste_back.jpeg'],
-  'T-shirt Adulte': ['/boutique/images/tshirt_homme_front.jpeg', '/boutique/images/tshirt_homme_back.jpeg'],
-  'T-shirt Junior': ['/boutique/images/tshirt_homme_front.jpeg', '/boutique/images/tshirt_homme_back.jpeg'],
-  'Hoodie Club Adulte': ['/boutique/images/hoodies_homme_front.jpeg', '/boutique/images/hoodies_homme_back.jpeg'],
-  'Hoodie Club Junior': ['/boutique/images/hoodies_homme_front.jpeg', '/boutique/images/hoodies_homme_back.jpeg'],
-  'Veste Softshell Femme': ['/boutique/images/veste_front.jpeg', '/boutique/images/veste_back.jpeg'],
-};
-
-// Price overrides for products where WooCommerce returns 0€ (variable products w/o base price)
-const PRICE_OVERRIDES = {
-  'T-shirt Mixte Adulte': 10,
-  'Hoodie Adulte': 25,
-  'Hoodie Femme': 25,
-  'Polaire Femme': 35,
-  // Nouveaux intitulés
-  'Veste Molleton Femme': 35,
-  'T-shirt Adulte': 10,
-  'Hoodie Club Adulte': 25,
-};
-
-// Category order for grouping
-const CATEGORY_ORDER = ['T-shirts', 'Sweats', 'Vestes', 'Accessoires'];
-
-// Cart: [{ productId, variationId, name, size, qty, price }]
-let cart = JSON.parse(localStorage.getItem('jcc_cart') || '[]');
-let products = [];
-// Track selected size per product
-const selectedSize = {};
-
-// ─── Transform WP API response → frontend format ────────────────────
-function transformProducts(data) {
-  return data.map(p => {
-    const price = PRICE_OVERRIDES[p.name] ?? p.price;
-    const hasSizes = p.sizes && p.sizes.length > 0;
-    let variations = [];
-    let attrs_meta = [];
-    if (hasSizes) {
-      attrs_meta = [{ label: 'Taille', options: p.sizes }];
-      variations = p.sizes.map((size, idx) => ({
-        id: -(p.id * 1000 + idx), // synthetic negative ID
-        price: price,
-        attributes: [{ name: size }],
-      }));
-    }
-    return {
-      id: p.id,
-      name: p.name,
-      description: p.description || '',
-      price: price,
-      category: p.category || '',
-      featured: false,
-      images: PRODUCT_IMAGES[p.name] || p.images || [],
-      variations: variations,
-      attrs_meta: attrs_meta,
-    };
-  });
-}
-
-// ─── Render products grouped by category ────────────────────────────
-function renderProductGrid(products) {
-  const grid = document.getElementById('products-grid');
-  grid.style.display = '';
-
-  // Group by category
-  const groups = {};
-  products.forEach(p => {
-    const cat = p.category || 'Autres';
-    if (!groups[cat]) groups[cat] = [];
-    groups[cat].push(p);
-  });
-
-  // Render in category order
-  CATEGORY_ORDER.forEach(cat => {
-    if (!groups[cat] || groups[cat].length === 0) return;
-    grid.insertAdjacentHTML('beforeend', `<h2 class="boutique__category-title">${cat}</h2>`);
-    groups[cat].forEach(p => {
-      grid.insertAdjacentHTML('beforeend', productCard(p));
-    });
-  });
-  // Remaining uncategorized
-  Object.keys(groups).forEach(cat => {
-    if (CATEGORY_ORDER.includes(cat)) return;
-    grid.insertAdjacentHTML('beforeend', `<h2 class="boutique__category-title">${cat}</h2>`);
-    groups[cat].forEach(p => {
-      grid.insertAdjacentHTML('beforeend', productCard(p));
-    });
-  });
-}
-
-// ─── Fetch products ──────────────────────────────────────────────────
-fetch(API_URL)
-  .then(r => r.json())
-  .then(data => {
-    products = transformProducts(data);
-    document.getElementById('loading').style.display = 'none';
-    renderProductGrid(products);
-    // Attach gallery hover & size events to each product card
-    document.querySelectorAll('.product[data-product-id]').forEach(card => {
-      const id = parseInt(card.dataset.productId);
-      const p = products.find(x => x.id === id);
-      if (!p) return;
-
-      // Init default size for variable products
-      if (p.variations && p.variations.length > 0) {
-        selectedSize[p.id] = p.variations[0].id;
-      }
-      // Gallery hover
-      const imgs = card.querySelectorAll('.product__img');
-      if (imgs.length >= 2) {
-        const gallery = card.querySelector('.product__gallery');
-        let current = 0;
-        gallery.addEventListener('mouseenter', () => {
-          if (current === 0) { imgs[0].style.opacity = '0'; imgs[1].style.opacity = '1'; }
-        });
-        gallery.addEventListener('mouseleave', () => {
-          if (current === 0) { imgs[0].style.opacity = '1'; imgs[1].style.opacity = '0'; }
-        });
-        gallery.addEventListener('click', () => {
-          current = (current + 1) % imgs.length;
-          imgs.forEach((img, i) => { img.style.opacity = i === current ? '1' : '0'; });
-        });
-      }
-      // Size selector change
-      const select = card.querySelector('.product__size-select');
-      if (select) {
-        select.addEventListener('change', (e) => onSizeChange(p.id, parseInt(e.target.value)));
-      }
-    });
-    updateCartUI();
-    updateAddButtons();
-  })
-  .catch(err => {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('error').style.display = 'block';
-    console.error('Failed to load products:', err);
-  });
-
-// ─── Product card HTML ───────────────────────────────────────────────
-function productCard(p) {
-  const imgsHtml = p.images.map((img, i) =>
-    `<img src="${img}" alt="${p.name}" class="product__img${i > 0 ? ' product__img--alt' : ''}"
-     width="400" height="400" loading="lazy" style="opacity:${i === 0 ? '1' : '0'}">`
-  ).join('');
-
-  const hasVars = p.variations && p.variations.length > 0;
-  const defaultPrice = hasVars ? p.variations[0].price : p.price;
-  const priceDisplay = `${defaultPrice} €`;
-
-  // Size selector for variable products
-  let sizeHtml = '';
-  if (hasVars) {
-    const label = p.attrs_meta[0]?.label || 'Taille';
-    const options = p.variations.map(v =>
-      `<option value="${v.id}">${v.attributes[0]?.name || ''}</option>`
-    ).join('');
-    sizeHtml = `
-      <div class="product__size" data-product-id="${p.id}">
-        <label for="size-${p.id}">${label}</label>
-        <select id="size-${p.id}" class="product__size-select">
-          ${options}
-        </select>
-      </div>`;
-  }
-
-  const btnText = '🛒 Ajouter au panier';
-  return `
-    <article class="product${p.featured ? ' product--featured' : ''}" data-product-id="${p.id}">
-      <div class="product__gallery">${imgsHtml}</div>
-      <div class="product__body">
-        <span class="product__category">${p.category}</span>
-        <h3 class="product__name">${p.name}</h3>
-        <p class="product__desc">${p.description || ''}</p>
-        ${sizeHtml}
-        <div class="product__pricing">
-          <span class="product__price">${priceDisplay}</span>
-        </div>
-        <button class="btn btn--cart" id="btn-${p.id}" onclick="addToCart(${p.id})">
-          ${btnText}
-        </button>
-      </div>
-    </article>`;
-}
-
-// ─── Size change handler ─────────────────────────────────────────────
-function onSizeChange(productId, variationId) {
-  selectedSize[productId] = variationId;
-  const p = products.find(x => x.id === productId);
-  if (!p) return;
-  const v = p.variations.find(x => x.id === variationId);
-  if (!v) return;
-  // Update price display
-  const card = document.querySelector(`.product[data-product-id="${productId}"]`);
-  if (card) {
-    const priceEl = card.querySelector('.product__price');
-    if (priceEl) priceEl.textContent = v.price + ' €';
-  }
-  updateAddButtons();
-}
-
-// ─── Add to cart (with variation support) ────────────────────────────
-function addToCart(productId) {
-  const p = products.find(x => x.id === productId);
-  if (!p) return;
-
-  const hasVars = p.variations && p.variations.length > 0;
-  const variationId = hasVars ? selectedSize[productId] : null;
-  const cartKey = variationId ? `${productId}-${variationId}` : `${productId}`;
-
-  // Find in cart by key
-  const existing = cart.find(c => getCartKey(c) === cartKey);
-  if (existing) {
-    existing.qty++;
-  } else {
-    let sizeName = '';
-    let price = p.price;
-    if (hasVars && variationId) {
-      const v = p.variations.find(x => x.id === variationId);
-      if (!v) {
-        alert('Veuillez choisir une taille.');
-        return;
-      }
-      sizeName = v.attributes[0]?.name || '';
-      price = v.price;
-    }
-    cart.push({
-      productId: productId,
-      variationId: variationId,
-      name: p.name,
-      size: sizeName,
-      qty: 1,
-      price: price,
-    });
-  }
-
-  saveCart();
-  updateCartUI();
-  updateAddButtons();
-}
-
-function getCartKey(item) {
-  return item.variationId ? `${item.productId}-${item.variationId}` : `${item.productId}`;
-}
-
-function removeFromCart(idx) {
-  cart.splice(idx, 1);
-  saveCart();
-  updateCartUI();
-  updateAddButtons();
-  renderCartItems();
-}
-
-function changeQty(idx, delta) {
-  const item = cart[idx];
-  if (!item) return;
-  item.qty = Math.max(1, item.qty + delta);
-  saveCart();
-  updateCartUI();
-  renderCartItems();
-}
-
-function saveCart() {
-  localStorage.setItem('jcc_cart', JSON.stringify(cart));
-}
-
-function updateCartUI() {
-  const total = cart.reduce((s, c) => s + c.qty, 0);
-  const fab = document.getElementById('cart-btn');
-  const count = document.getElementById('cart-count');
-  fab.style.display = total > 0 ? '' : 'none';
-  count.textContent = total;
-}
-
-function updateAddButtons() {
-  products.forEach(p => {
-    const btn = document.getElementById(`btn-${p.id}`);
-    if (!btn) return;
-    let cartQty = 0;
-    const hasVars = p.variations && p.variations.length > 0;
-    cart.forEach(c => {
-      if (c.productId === p.id) {
-        if (!hasVars || c.variationId === selectedSize[p.id]) {
-          cartQty += c.qty;
-        }
-      }
-    });
-    btn.textContent = cartQty > 0 ? `✓ Dans le panier (${cartQty})` : '🛒 Ajouter au panier';
-  });
-}
-
-function toggleCart(show) {
-  const panel = document.getElementById('cart-panel');
-  panel.style.display = show ? 'block' : 'none';
-  if (show) renderCartItems();
-}
-
-function renderCartItems() {
-  const container = document.getElementById('cart-items');
-  const totalEl = document.getElementById('cart-total-price');
-
-  if (cart.length === 0) {
-    container.innerHTML = '<p class="cart__empty">Votre panier est vide</p>';
-    totalEl.textContent = '0 €';
-    return;
-  }
-
-  let total = 0;
-  container.innerHTML = cart.map((item, idx) => {
-    const subtotal = item.price * item.qty;
-    total += subtotal;
-    const sizeTag = item.size ? `<span class="cart__size-tag">${item.size}</span>` : '';
-    return `
-      <div class="cart__item">
-        <div class="cart__item-info">
-          <strong>${item.name}</strong>
-          ${sizeTag}
-          <span>${item.price} €</span>
-        </div>
-        <div class="cart__item-actions">
-          <button onclick="changeQty(${idx}, -1)">−</button>
-          <span>${item.qty}</span>
-          <button onclick="changeQty(${idx}, 1)">+</button>
-          <button class="cart__remove" onclick="removeFromCart(${idx})">🗑</button>
-        </div>
-        <div class="cart__item-subtotal">${subtotal.toFixed(2)} €</div>
-      </div>`;
-  }).join('');
-
-  totalEl.textContent = total.toFixed(2) + ' €';
-}
-
-// ─── Checkout ────────────────────────────────────────────────────────
-document.getElementById('checkout-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = e.target.querySelector('button');
-  btn.disabled = true;
-  btn.textContent = 'Paiement…';
-
-  const name = document.getElementById('customer-name').value.trim();
-  const email = document.getElementById('customer-email').value.trim();
-
-  if (!name || !email) {
-    alert('Veuillez remplir votre nom et votre email.');
-    btn.disabled = false;
-    btn.textContent = 'Commander';
-    return;
-  }
-
-  try {
-    const res = await fetch('/wp-json/jcc/v1/create-payment', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        cart: cart.map(c => ({
-          productId: c.productId,
-          qty: c.qty,
-          size: c.size || '',
-          price: c.price,
-        })),
-        customer: {
-          name: name,
-          email: email,
-        }
-      })
-    });
-    const data = await res.json();
-
-    if (data.success) {
-      cart = [];
-      saveCart();
-      window.location.href = data.redirect_url;
-    } else {
-      alert('Erreur : ' + (data.message || 'Impossible de créer le paiement'));
-      btn.disabled = false;
-      btn.textContent = 'Commander';
-    }
-  } catch (err) {
-    alert('Erreur réseau : ' + err.message);
-    btn.disabled = false;
-    btn.textContent = 'Commander';
-  }
-});
-</script>
+<script src="{{ "js/shop-config.js" | relURL }}" defer></script>
+<script src="{{ "js/boutique.js" | relURL }}" defer></script>
 {{ end }}
