@@ -10,7 +10,7 @@ Site officiel du **Judo Club Cattenom Rodemack** (`https://judo-cattenom.fr/`), 
 - **Tarifs & Adhésion (`/tarifs/`)** : cotisations de la saison, réductions familiales, dispositifs d'aide (Pass'Sport) et inscription en ligne via HelloAsso.
 - **Calendrier (`/calendrier/`)** : planning des cours et événements du club synchronisé depuis le calendrier Nextcloud du club (`static/calendar/events.ics`).
 - **Événements (`/inscriptions/`)** : inscription en ligne des licenciés du club aux entraînements départementaux, stages et interclubs (`static/js/event-register.js` → Edge Function Supabase `event-register`, avec vérification de la licence FFJDA de la saison et de la catégorie d'âge).
-- **Boutique (`/boutique/`)** : vitrine des équipements et textiles du club, connectée en arrière-plan à WooCommerce et au paiement HelloAsso (`/wp-json/jcc/v1/*`).
+- **Boutique (`/boutique/`)** : équipements et textiles du club en précommande, au prix public (`static/js/boutique.js` → Edge Function Supabase `shop` : catalogue, commande, paiement HelloAsso). Suivi de commande et retour de paiement sur `/boutique/commande/?t=<jeton>` (`static/js/boutique-commande.js`). Catalogue, campagnes et commandes se gèrent dans la gestion (onglet Admin · Boutique).
 - **Espace Membre (`/espace-membre/`)** : connexion SSO OIDC PKCE (`static/js/auth.js`, `static/js/pkce-utils.js`) vers Keycloak (`auth.judo-cattenom.fr`) et module d'invitation réservé aux membres du bureau (`static/js/invite.js` → `/api/invite`).
 - **Assemblée Générale (`/assemblee-generale/`)** : formulaire de présence et de procuration en ligne (`static/js/ag-rsvp.js` → Edge Function Supabase `ag-rsvp`).
 - **Contact (`/contact/`)** & **Politique de confidentialité (`/politique-de-confidentialite/`)**.

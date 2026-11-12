@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{{ if .IsHome }}Judo Club Cattenom Rodemack — Judo, Taïso, Iaïdo depuis 50 ans{{ else }}{{ .Title }} — Judo Club Cattenom Rodemack{{ end }}</title>
   <link rel="canonical" href="{{ .Permalink }}">
+  {{ with .Params.robots }}<meta name="robots" content="{{ . }}">{{ end }}
   <meta name="description" content="{{ if .Params.description }}{{ .Params.description | plainify }}{{ else }}{{ if .IsHome }}Club de Judo, Taïso et Iaïdo à Cattenom depuis plus de 50 ans. Cours pour tous les âges de 3 à 99 ans.{{ else }}{{ .Summary | plainify | truncate 160 }}{{ end }}{{ end }}">
   <meta property="og:title" content="{{ .Title }}">
   <meta property="og:description" content="{{ if .Params.description }}{{ .Params.description | plainify }}{{ else }}{{ if .IsHome }}Club de Judo, Taïso et Iaïdo à Cattenom depuis plus de 50 ans.{{ else }}{{ .Summary | plainify | truncate 160 }}{{ end }}{{ end }}">
