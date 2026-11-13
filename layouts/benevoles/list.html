@@ -1,0 +1,112 @@
+{{ define "main" }}
+<section class="page-hero">
+  <div class="container">
+    <a href="{{ "/index.html" | relURL }}" class="page-hero__back">← Retour à l'accueil</a>
+    <h1 id="vol-title">{{ .Title }}</h1>
+  </div>
+</section>
+<section class="page-content">
+  <div class="container">
+    <article class="prose vol" id="vol-root" data-base-url="{{ .RelPermalink }}">
+
+      <p id="vol-loading" class="evt-notice" role="status">Chargement…</p>
+      <noscript><p class="evt-notice">L'inscription des bénévoles nécessite JavaScript. Vous pouvez aussi nous écrire via la <a href="{{ "contact/" | relURL }}">page Contact</a>.</p></noscript>
+      <div id="vol-load-error" class="ag-feedback ag-feedback--error" role="alert" hidden></div>
+
+      <!-- Sans ?e=… : liste des événements qui cherchent des bénévoles -->
+      <div id="vol-list" hidden>
+        {{ .Content }}
+        <ul id="vol-events" class="event-list"></ul>
+        <p id="vol-no-events" hidden>Aucun appel à bénévoles n'est ouvert pour le moment. Merci de votre aide, et à bientôt !</p>
+      </div>
+
+      <!-- Avec ?e=<slug> : les créneaux d'un événement -->
+      <div id="vol-event" hidden>
+
+        <div id="vol-infobar" class="ag-infobar evt-infobar" role="group" aria-label="Informations sur l'événement">
+          <div class="ag-infobar__item">
+            <span class="ag-infobar__label">Date</span>
+            <span class="ag-infobar__value" id="vol-dates"></span>
+          </div>
+          <div class="ag-infobar__item" id="vol-location-item">
+            <span class="ag-infobar__label">Lieu</span>
+            <span class="ag-infobar__value" id="vol-location"></span>
+          </div>
+          <div class="ag-infobar__item ag-infobar__item--deadline">
+            <span class="ag-infobar__label">Créneaux à pourvoir</span>
+            <span class="ag-infobar__value" id="vol-needed"></span>
+          </div>
+        </div>
+
+        <p id="vol-description" class="vol-description" hidden></p>
+
+        <p id="vol-closed" class="evt-notice" hidden>Les inscriptions à cet événement sont closes. Merci à tous les bénévoles !</p>
+        <p id="vol-token-invalid" class="evt-notice" hidden>Ce lien de modification n'est plus valide : l'inscription a peut-être été retirée. Vous pouvez vous réinscrire ci-dessous.</p>
+
+        <div id="vol-success" class="ag-feedback ag-feedback--success" role="status" tabindex="-1" hidden>
+          <h2 id="vol-success-title">Merci !</h2>
+          <p id="vol-success-text"></p>
+        </div>
+
+        <form id="vol-form" novalidate>
+
+          <div id="vol-mine" class="evt-notice vol-mine" hidden></div>
+          <div id="vol-error-summary" class="ag-feedback ag-feedback--error" role="alert" hidden></div>
+
+          <fieldset class="ag-fieldset vol-slots-fieldset">
+            <legend>Choisissez vos créneaux <span class="ag-required" aria-hidden="true">*</span></legend>
+            <p class="ag-field__hint evt-help">Cochez un ou plusieurs créneaux. Les prénoms affichés sont ceux des bénévoles déjà inscrits.</p>
+            <div id="vol-slots"></div>
+          </fieldset>
+
+          <fieldset class="ag-fieldset vol-identity">
+            <legend>Vos coordonnées</legend>
+
+            <label class="ag-field" for="vol-first-name">
+              Prénom <span class="ag-required" aria-hidden="true">*</span>
+            </label>
+            <input class="ag-input" type="text" id="vol-first-name" name="first_name" autocomplete="given-name" maxlength="60" required>
+
+            <label class="ag-field" for="vol-last-name">
+              Nom <span class="ag-required" aria-hidden="true">*</span>
+            </label>
+            <input class="ag-input" type="text" id="vol-last-name" name="last_name" autocomplete="family-name" maxlength="60" required>
+
+            <label class="ag-field" for="vol-email">
+              Adresse e-mail <span class="ag-required" aria-hidden="true">*</span>
+              <span class="ag-field__hint">Pour vous envoyer la confirmation et le lien qui permet de modifier vos créneaux</span>
+            </label>
+            <input class="ag-input" type="email" id="vol-email" name="email" autocomplete="email" maxlength="254" required>
+
+            <label class="ag-field" for="vol-phone">
+              Téléphone <span class="ag-field__hint">Facultatif, pour vous joindre le jour même si besoin</span>
+            </label>
+            <input class="ag-input" type="tel" id="vol-phone" name="phone" autocomplete="tel" maxlength="30">
+
+            <label class="ag-field" for="vol-comment">
+              Commentaire <span class="ag-field__hint">Facultatif</span>
+            </label>
+            <textarea class="ag-input" id="vol-comment" name="comment" rows="3" maxlength="500"></textarea>
+          </fieldset>
+
+          <div class="ag-hp">
+            <label for="vol-website">Site web (laisser ce champ vide)</label>
+            <input type="text" id="vol-website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <p class="ag-rgpd">
+            Votre prénom et l'initiale de votre nom sont visibles des personnes qui consultent cette page. Votre adresse e-mail et votre téléphone ne sont connus que du bureau du club, et servent uniquement à l'organisation de cet événement. Voir notre <a href="{{ "politique-de-confidentialite/" | relURL }}">politique de confidentialité</a>.
+          </p>
+
+          <div class="vol-actions">
+            <button type="submit" id="vol-submit" class="btn btn--primary btn--lg">Je m'inscris</button>
+            <button type="button" id="vol-cancel" class="btn btn--ghost" hidden>Me désinscrire</button>
+          </div>
+        </form>
+
+      </div>
+    </article>
+  </div>
+</section>
+<script src="{{ "js/benevoles.js" | relURL }}" defer></script>
+{{ end }}
