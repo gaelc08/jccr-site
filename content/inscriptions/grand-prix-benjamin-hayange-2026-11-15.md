@@ -2,6 +2,7 @@
 title: "Grand Prix Benjamin à Hayange"
 description: "Inscription au Grand Prix Benjamin (filles et garçons) du dimanche 15 novembre 2026 à Hayange, organisé par le Comité de Moselle, pour les licenciés benjamins."
 event_slug: "grand-prix-benjamin-hayange-2026-11-15"
+event_date: "2026-11-15"
 ---
 
 Le Comité de Moselle de judo organise le **dimanche 15 novembre** à Hayange le Grand Prix Benjamin, pour les filles et les garçons.

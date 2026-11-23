@@ -2,6 +2,7 @@
 title: "Entraînements départementaux à Hayange"
 description: "Inscription aux entraînements départementaux du samedi 14 novembre 2026 à Hayange, organisés par le Comité de Moselle, pour les licenciés minimes à seniors."
 event_slug: "entrainement-departemental-hayange-2026-11-14"
+event_date: "2026-11-14"
 ---
 
 Le Comité de Moselle de judo organise le **samedi 14 novembre** à Hayange deux entraînements de masse : c'est le premier regroupement départemental de la saison.

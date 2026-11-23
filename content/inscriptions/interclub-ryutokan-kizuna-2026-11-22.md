@@ -2,6 +2,7 @@
 title: "Interclub du Ryutokan Kizuna à Sainte-Marie-aux-Chênes"
 description: "Inscription à l'interclub du dimanche 22 novembre 2026 au gymnase Arago à Sainte-Marie-aux-Chênes, du baby judo (2021-2022) aux vétérans."
 event_slug: "interclub-ryutokan-kizuna-2026-11-22"
+event_date: "2026-11-22"
 ---
 
 Le club Ryutokan Kizuna organise le **dimanche 22 novembre** au gymnase Arago, à Sainte-Marie-aux-Chênes, son premier interclub de la saison : une rencontre conviviale et éducative.
