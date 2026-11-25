@@ -35,6 +35,20 @@
 
       {{ .Content }}
 
+      {{ with .Params.documents }}
+      <section class="evt-docs" aria-labelledby="evt-docs-title">
+        <h2 id="evt-docs-title">Documents à télécharger</h2>
+        <ul class="evt-docs__list">
+          {{ range . }}
+          <li class="evt-docs__item">
+            <a class="evt-docs__link" href="{{ .file | relURL }}" target="_blank" rel="noopener" download>{{ .title }}</a>
+            {{ with .detail }}<span class="evt-infobar__detail">{{ . }}</span>{{ end }}
+          </li>
+          {{ end }}
+        </ul>
+      </section>
+      {{ end }}
+
       <p id="evt-closed" class="evt-notice" hidden>Les inscriptions sont closes.</p>
 
       <form id="evt-form" data-event-slug="{{ .Params.event_slug }}" novalidate hidden>
